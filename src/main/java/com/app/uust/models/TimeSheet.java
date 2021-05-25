@@ -1,5 +1,6 @@
 package com.app.uust.models;
 
+import java.util.HashMap;
 import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
@@ -12,9 +13,29 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @ToString
 @Document(collection = "Timesheet")
 public class TimeSheet {
+
+  public TimeSheet(
+    String id,
+    String dateTimestamp,
+    HashMap<String, SheetDetail> attendance
+  ) {
+    this.id = id;
+    this.dateTimestamp = dateTimestamp;
+    this.attendance = attendance;
+  }
+
+  public TimeSheet() {}
+
+  public TimeSheet(String dateTimestamp, String username, SheetDetail detail) {
+    this.dateTimestamp = dateTimestamp;
+    this.attendance = new HashMap<>();
+    this.attendance.put(username, detail);
+  }
+
   @Id
   private String id;
 
   private String dateTimestamp;
-  private List<SheetDetail> attendance;
+
+  private HashMap<String, SheetDetail> attendance;
 }

@@ -8,7 +8,7 @@ import lombok.ToString;
 @Setter
 @ToString
 public class SheetDetail {
-  private String userId;
-  private String attendanceState;
-  private String status;
+  private String username;
+  private String attendanceState; //saved,submitted
+  private String status; //absent, present
 }
