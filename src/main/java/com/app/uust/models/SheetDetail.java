@@ -11,4 +11,12 @@ public class SheetDetail {
   private String username;
   private String attendanceState; //saved,submitted
   private String status; //absent, present
+
+  public SheetDetail(String username, String attendanceState, String status) {
+    this.username = username;
+    this.attendanceState = attendanceState;
+    this.status = status;
+  }
+
+  public SheetDetail() {}
 }

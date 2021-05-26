@@ -39,16 +39,18 @@ public class EmployeeService implements UserDetailsService {
     );
   }
 
-  public void addToTimeSheet(TimeSheetReq timesheetRequest, String username) {
+  public void addToTimeSheet(TimeSheetReq timesheetRequest, String username)
+    throws Exception {
     List<TimeSheet> timeSheets = timeSheetRepo.findByDateTimestamp(
       timesheetRequest.getTimestamp()
     );
-    SheetDetail empSheetDetail = null;
+    SheetDetail empSheetDetail;
 
     if (timeSheets.size() == 0) {
       empSheetDetail = new SheetDetail();
       empSheetDetail.setAttendanceState(timesheetRequest.getState());
       empSheetDetail.setStatus(timesheetRequest.getStatus());
+      empSheetDetail.setUsername(username);
 
       timeSheetRepo.save(
         new TimeSheet(timesheetRequest.getTimestamp(), username, empSheetDetail)
@@ -56,22 +58,46 @@ public class EmployeeService implements UserDetailsService {
     } else {
       // Timesheet for timestamp exists
       // Now check for current user's attendance
-      // List<SheetDetail> attendance = timeSheets.get(0).getAttendance();
-      // SheetDetail usersDetail = attendance.stream().anyMatch(o -> o.getUsername().equals(username));
 
       TimeSheet timeSheet = timeSheets.get(0);
-      System.out.println(timeSheet);
+      HashMap<String, SheetDetail> attendance = timeSheet.getAttendance();
+      if (!attendance.containsKey(username)) {
+        empSheetDetail =
+          new SheetDetail(
+            username,
+            timesheetRequest.getState(),
+            timesheetRequest.getStatus()
+          );
+        attendance.put(username, empSheetDetail);
+
+        timeSheetRepo.save(timeSheet);
+      } else {
+        throw new Exception(
+          "Already added for " + timesheetRequest.getTimestamp()
+        );
+      }
+    }
+  }
+
+  public void updateTimesheet(TimeSheetReq timesheetRequest, String username)
+    throws Exception {
+    List<TimeSheet> timeSheets = timeSheetRepo.findByDateTimestamp(
+      timesheetRequest.getTimestamp()
+    );
+    SheetDetail empSheetDetail = null;
+
+    if (timeSheets.size() > 0) {
+      TimeSheet timeSheet = timeSheets.get(0);
       HashMap<String, SheetDetail> attendance = timeSheet.getAttendance();
       if (attendance.containsKey(username)) {
         empSheetDetail = attendance.get(username);
         empSheetDetail.setAttendanceState(timesheetRequest.getState());
         empSheetDetail.setStatus(timesheetRequest.getStatus());
-        attendance.put(username, empSheetDetail);
-        //  update timeSheets
-
       }
+      attendance.put(username, empSheetDetail);
+
       timeSheetRepo.save(timeSheet);
-    }
+    } else throw new Exception("Cannot add.");
   }
 
   public void updateProfile(Employee employee, String username)
