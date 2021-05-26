@@ -7,7 +7,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
-import javax.crypto.SecretKey;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -64,7 +63,9 @@ public class JwtUtil {
       .setClaims(claims)
       .setSubject(subject)
       .setIssuedAt(new Date(System.currentTimeMillis()))
-      .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 10))
+      .setExpiration(
+        new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 100)
+      )
       .signWith(SignatureAlgorithm.HS256, SECRET_KEY)
       .compact();
   }

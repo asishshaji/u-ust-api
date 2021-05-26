@@ -2,10 +2,12 @@ package com.app.uust.controller;
 
 import com.app.uust.models.AuthReq;
 import com.app.uust.models.AuthResp;
+import com.app.uust.models.Employee;
+import com.app.uust.models.MessageResponse;
 import com.app.uust.models.TimeSheetReq;
 import com.app.uust.services.EmployeeService;
 import com.app.uust.utils.JwtUtil;
-import io.jsonwebtoken.Header;
+import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -14,12 +16,14 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@RequestMapping("api/v1/employee")
 public class EmployeeController {
   @Autowired
   private AuthenticationManager authenticationManager;
@@ -29,21 +33,6 @@ public class EmployeeController {
 
   @Autowired
   private JwtUtil jwtUtil;
-
-  // @GetMapping("/")
-  // public String hello(@RequestAttribute("username") String username) {
-  //   System.out.println(username);
-  //   return "Hello World!";
-  // }
-
-  // @GetMapping("/hi")
-  // public String hi(
-  //   @RequestAttribute("username") String username,
-  //   @RequestAttribute("type") String type
-  // ) {
-  //   System.out.println(username);
-  //   return "Hello " + username + " Type: " + type;
-  // }
 
   @PostMapping("/authorize")
   public ResponseEntity<?> createauthenticationToken(
@@ -78,5 +67,34 @@ public class EmployeeController {
     employeeService.addToTimeSheet(timeSheetReq, username);
 
     return ResponseEntity.ok(timeSheetReq.toString());
+  }
+
+  @GetMapping("/")
+  public String hello(@RequestAttribute("username") String username) {
+    System.out.println(username);
+    return "Hello World!";
+  }
+
+  @PutMapping("/profile")
+  public ResponseEntity<?> updateProfile(
+    @RequestBody Employee employee,
+    @RequestAttribute("username") String username
+  )
+    throws Exception {
+    employeeService.updateProfile(employee, username);
+
+    return ResponseEntity.ok(
+      new MessageResponse("Updated employee").toString()
+    );
+  }
+
+  @PutMapping("/password")
+  public ResponseEntity<?> changePassword(
+    @RequestAttribute("username") String username,
+    @RequestBody Map<String, String> resp
+  )
+    throws Exception {
+    employeeService.updatePassword(resp.get("password"), username);
+    return ResponseEntity.ok(new MessageResponse("Password updated"));
   }
 }

@@ -10,9 +10,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.mongodb.core.MongoOperations;
-import org.springframework.data.mongodb.core.query.Criteria;
-import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -74,6 +71,29 @@ public class EmployeeService implements UserDetailsService {
 
       }
       timeSheetRepo.save(timeSheet);
+    }
+  }
+
+  public void updateProfile(Employee employee, String username)
+    throws Exception {
+    Employee emp = getEmployeeByUsername(username);
+    if (emp != null) {
+      employee.setId(emp.getId());
+      employee.setPassword(emp.getPassword());
+      employeeRepo.save(employee);
+    } else {
+      throw new Exception("User doesnot exists");
+    }
+  }
+
+  public void updatePassword(String password, String username)
+    throws Exception {
+    Employee emp = getEmployeeByUsername(username);
+    if (emp != null) {
+      emp.setPassword(password);
+      employeeRepo.save(emp);
+    } else {
+      throw new Exception("User doesnot exists");
     }
   }
 }
