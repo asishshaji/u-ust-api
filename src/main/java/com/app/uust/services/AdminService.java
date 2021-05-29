@@ -2,8 +2,12 @@ package com.app.uust.services;
 
 import com.app.uust.models.Admin;
 import com.app.uust.models.Employee;
+import com.app.uust.models.Leave;
+import com.app.uust.models.LeaveType;
 import com.app.uust.repository.AdminRepo;
 import com.app.uust.repository.EmployeeRepo;
+import com.app.uust.repository.LeaveRepo;
+import com.app.uust.repository.LeaveTypeRepo;
 import com.app.uust.repository.TimeSheetRepo;
 import com.app.uust.utils.Helpers;
 import java.util.ArrayList;
@@ -27,6 +31,12 @@ public class AdminService implements UserDetailsService {
   @Autowired
   private EmployeeRepo employeeRepo;
 
+  @Autowired
+  private LeaveTypeRepo leaveTypeRepo;
+
+  @Autowired
+  private LeaveRepo leaveRepo;
+
   public Employee createEmployee(Employee employee) throws Exception {
     // Check if employee exists
 
@@ -41,6 +51,7 @@ public class AdminService implements UserDetailsService {
     emp.setLastName(employee.getLastName());
     emp.setPassword(employee.getPassword());
     emp.setCreatedTimestamp(Helpers.getCurrentTimestamp());
+    emp.setImageUrl(employee.getImageUrl());
 
     System.out.println(emp);
     return employeeRepo.save(emp);
@@ -67,13 +78,38 @@ public class AdminService implements UserDetailsService {
   @Override
   public UserDetails loadUserByUsername(String username)
     throws UsernameNotFoundException {
-    // TODO Auto-generated method stub
+    System.out.println("HIHELLO " + username);
+    List<Admin> admins = adminRepo.findByUsername("admin");
+    System.out.println("HIHELLO " + admins.size());
 
-    Admin admin = adminRepo.findByUsername(username).get(0);
+    Admin admin = (admins.size() > 0) ? admins.get(0) : null;
+    System.out.println("HIHELLO " + admin.toString());
     return new User(
       admin.getUsername(),
       admin.getPassword(),
       new ArrayList<>()
     );
+  }
+
+  public Employee getEmployeeById(String id) {
+    Optional<Employee> optionEmp = employeeRepo.findById(id);
+    Employee emp = optionEmp.get();
+    return emp;
+  }
+
+  public LeaveType createLeaveType(LeaveType leaveType) {
+    return leaveTypeRepo.insert(leaveType);
+  }
+
+  public List<LeaveType> getAllLeaveType() {
+    return leaveTypeRepo.findAll();
+  }
+
+  public List<Leave> getAllLeave() {
+    return leaveRepo.findAll();
+  }
+
+  public Leave createLeave(Leave leave) {
+    return leaveRepo.save(leave);
   }
 }

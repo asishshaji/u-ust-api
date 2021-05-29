@@ -6,20 +6,17 @@ import lombok.ToString;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-@Getter
 @Setter
+@Getter
 @ToString
-@Document(collection = "Employee")
-public class Employee {
+@Document(collection = "Leave")
+public class Leave {
   @Id
   private String id;
 
+  private String leaveType;
+  private String date;
+  private String remarks;
+  private Boolean validated = false;
   private String username;
-  private String firstName;
-  private String lastName;
-
-  private String password;
-  private String imageUrl;
-
-  private Long createdTimestamp;
 }

@@ -25,6 +25,9 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 @Configuration
 @Order(1)
@@ -35,7 +38,7 @@ public class AdminConf extends WebSecurityConfigurerAdapter {
   @Autowired
   private JwtFilter jwtFilter;
 
-  @Bean
+  @Bean("adminAuthManager")
   @Override
   public AuthenticationManager authenticationManagerBean() throws Exception {
     return super.authenticationManagerBean();
@@ -59,6 +62,7 @@ public class AdminConf extends WebSecurityConfigurerAdapter {
       .and()
       .sessionManagement()
       .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+    http.cors();
 
     http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
   }

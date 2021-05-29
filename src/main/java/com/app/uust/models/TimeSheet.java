@@ -1,6 +1,8 @@
 package com.app.uust.models;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -15,8 +17,8 @@ public class TimeSheet {
 
   public TimeSheet(
     String id,
-    String dateTimestamp,
-    HashMap<String, SheetDetail> attendance
+    Long dateTimestamp,
+    List<SheetDetail> attendance
   ) {
     this.id = id;
     this.dateTimestamp = dateTimestamp;
@@ -25,16 +27,16 @@ public class TimeSheet {
 
   public TimeSheet() {}
 
-  public TimeSheet(String dateTimestamp, String username, SheetDetail detail) {
+  public TimeSheet(Long dateTimestamp, String username, SheetDetail detail) {
     this.dateTimestamp = dateTimestamp;
-    this.attendance = new HashMap<>();
-    this.attendance.put(username, detail);
+    this.attendance = new ArrayList();
+    this.attendance.add(detail);
   }
 
   @Id
   private String id;
 
-  private String dateTimestamp;
+  private Long dateTimestamp;
 
-  private HashMap<String, SheetDetail> attendance;
+  private List<SheetDetail> attendance;
 }

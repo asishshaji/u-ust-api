@@ -5,10 +5,9 @@ import lombok.Setter;
 import lombok.ToString;
 
 @Setter
-@Getter
 @ToString
-public class TimeSheetReq {
-  private String status;
-  private String state;
-  private Long timestamp;
+@Getter
+public class TimesheetReq {
+  private Long start;
+  private Long end;
 }

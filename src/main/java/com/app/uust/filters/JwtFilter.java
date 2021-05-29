@@ -52,9 +52,12 @@ public class JwtFilter extends OncePerRequestFilter {
       SecurityContextHolder.getContext().getAuthentication() == null
     ) {
       UserDetails userDetails = null;
-      if (type.equals("employee")) userDetails =
-        this.employeeService.loadUserByUsername(username); else userDetails =
-        this.adminService.loadUserByUsername(username);
+      if (type.equals("employee")) {
+        userDetails = this.employeeService.loadUserByUsername(username);
+      } else {
+        System.out.println("HIHELLO SELECTED");
+        userDetails = this.adminService.loadUserByUsername(username);
+      }
       if (jwtUtil.validateToken(jwtToken, userDetails)) {
         UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
           userDetails,

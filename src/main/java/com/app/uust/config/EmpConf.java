@@ -36,7 +36,7 @@ public class EmpConf extends WebSecurityConfigurerAdapter {
   private JwtFilter jwtFilter;
 
   @Override
-  @Bean
+  @Bean("empAuthManager")
   public AuthenticationManager authenticationManagerBean() throws Exception {
     return super.authenticationManagerBean();
   }
@@ -64,6 +64,8 @@ public class EmpConf extends WebSecurityConfigurerAdapter {
       .and()
       .sessionManagement()
       .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+
+    http.cors();
 
     http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
   }

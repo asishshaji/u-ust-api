@@ -9,17 +9,10 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Getter
 @Setter
 @ToString
-@Document(collection = "Employee")
-public class Employee {
+@Document(collection = "LeaveType")
+public class LeaveType {
   @Id
   private String id;
 
-  private String username;
-  private String firstName;
-  private String lastName;
-
-  private String password;
-  private String imageUrl;
-
-  private Long createdTimestamp;
+  private String typeName;
 }
