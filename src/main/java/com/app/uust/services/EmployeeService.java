@@ -16,6 +16,7 @@ import java.util.HashMap;
 import java.util.List;
 import org.bson.Document;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.aggregation.Aggregation;
 import org.springframework.data.mongodb.core.aggregation.AggregationOperation;
@@ -251,6 +252,9 @@ public class EmployeeService implements UserDetailsService {
   }
 
   public List<Leave> findByUsername(String username) {
-    return leaveRepo.findByUsername(username);
+    return leaveRepo.findByUsername(
+      username,
+      Sort.by(Sort.Direction.DESC, "id")
+    );
   }
 }
