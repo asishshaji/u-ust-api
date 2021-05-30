@@ -1,0 +1,17 @@
+version: "3.8"
+
+services:
+  ustmongo:
+    image: mongo:latest
+    container_name: ustmongo
+    restart: always
+    ports:
+      - 0.0.0.0:27017:27017
+  uustdocker:
+    build: .
+    image: u-ust-docker
+    container_name: uustdocker
+    ports:
+      - 0.0.0.0:2021:2021
+    depends_on:
+      - ustmongo
